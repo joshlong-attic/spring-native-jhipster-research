@@ -7,63 +7,61 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.r2dbc.core.R2dbcEntityOperations;
+import org.springframework.data.r2dbc.repository.R2dbcRepository;
+import reactor.core.publisher.Flux;
 
-import javax.persistence.Entity;
-import javax.persistence.EntityManager;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import java.util.Collection;
+import static org.springframework.data.relational.core.query.Criteria.where;
+import static org.springframework.data.relational.core.query.Query.query;
 
 @SpringBootApplication
 public class RepositoriesApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(RepositoriesApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(RepositoriesApplication.class, args);
+	}
 
-    @Bean
-    ApplicationRunner runner(CustomerRepository repository) {
-        return events -> {
-            repository.getCustomersByName("Matt").forEach(System.out::println);
-        };
-    }
+	@Bean
+	ApplicationRunner runner(CustomerRepository repository) {
+		return events -> {
+
+			repository.getCustomersByName("Matt").subscribe(m -> System.out.println("Matt: " + m));
+			repository.getCustomersByName("Josh").subscribe(j -> System.out.println("Josh: " + j));
+		};
+	}
 
 }
 
 interface CustomCustomerRepository {
-    Collection<Customer> getCustomersByName(String name);
+	Flux<Customer> getCustomersByName(String name);
 }
 
-class CustomAuthorRepositoryImpl implements CustomCustomerRepository {
+class CustomCustomerRepositoryImpl implements CustomCustomerRepository {
 
-    private final EntityManager entityManager;
+	private final R2dbcEntityOperations r2dbcEntityOperations;
 
-    CustomAuthorRepositoryImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+	CustomCustomerRepositoryImpl(R2dbcEntityOperations r2dbcEntityOperations) {
+		this.r2dbcEntityOperations = r2dbcEntityOperations;
+	}
 
-    @Override
-    public Collection<Customer> getCustomersByName(String name) {
-        return this.entityManager
-                .createQuery("select c from Customer  c where c.name =? ", Customer.class)
-                .setParameter(1, name)
-                .getResultList();
-    }
+	@Override
+	public Flux<Customer> getCustomersByName(String name) {
+		return this.r2dbcEntityOperations
+			.select(query(where("name").is(name)), Customer.class);
+	}
 }
 
 interface CustomerRepository extends CustomCustomerRepository,
-        JpaRepository<Customer, Integer> {
+	R2dbcRepository<Customer, Integer> {
 }
 
 @Data
 @AllArgsConstructor
-@Entity
 @NoArgsConstructor
 class Customer {
 
-    @Id
-    @GeneratedValue
-    private Integer id;
-    private String name;
+	@Id
+	private Integer id;
+	private String name;
 }
