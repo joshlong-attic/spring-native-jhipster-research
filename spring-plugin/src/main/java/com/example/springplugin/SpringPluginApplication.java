@@ -4,13 +4,22 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.nativex.hint.AccessBits;
+import org.springframework.nativex.hint.TypeHint;
 import org.springframework.plugin.core.Plugin;
 import org.springframework.plugin.core.PluginRegistry;
 import org.springframework.plugin.core.config.EnablePluginRegistries;
+import org.springframework.plugin.core.support.PluginRegistryFactoryBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
+@TypeHint(
+	types = {
+		PluginRegistryFactoryBean.class
+	},
+	access = AccessBits.ALL
+)
 @EnablePluginRegistries(WriterPlugin.class)
 @SpringBootApplication
 public class SpringPluginApplication {
