@@ -5,6 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.nativex.hint.AccessBits;
+import org.springframework.nativex.hint.JdkProxyHint;
 import org.springframework.nativex.hint.TypeHint;
 import org.springframework.plugin.core.Plugin;
 import org.springframework.plugin.core.PluginRegistry;
@@ -14,6 +15,12 @@ import org.springframework.stereotype.Component;
 
 import java.util.Locale;
 
+@JdkProxyHint (types = {
+	java.util.List.class,
+	org.springframework.aop.SpringProxy.class,
+	org.springframework.aop.framework.Advised.class,
+	org.springframework.core.DecoratingProxy.class
+})
 @TypeHint(
 	types = {
 		PluginRegistryFactoryBean.class
