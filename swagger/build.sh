@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-mvn -Pnative -DskipTests clean package && ./target/spring-plugin
+mvn -Pnative -DskipTests clean package && ./target/swagger

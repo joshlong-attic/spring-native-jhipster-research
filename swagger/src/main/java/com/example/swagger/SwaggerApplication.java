@@ -14,6 +14,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+
+/*@TypeHint(
+	types = {
+		springfox.documentation.spi.schema.ModelBuilderPlugin.class
+	},
+	 access = AccessBits.ALL
+)*/
 @JdkProxyHint(types = {
 	java.util.List.class,
 	org.springframework.aop.SpringProxy.class,
