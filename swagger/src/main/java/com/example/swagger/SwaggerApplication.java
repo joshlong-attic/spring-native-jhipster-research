@@ -15,18 +15,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 
-/*@TypeHint(
+@JdkProxyHint(
 	types = {
-		springfox.documentation.spi.schema.ModelBuilderPlugin.class
-	},
-	 access = AccessBits.ALL
-)*/
-@JdkProxyHint(types = {
-	java.util.List.class,
-	org.springframework.aop.SpringProxy.class,
-	org.springframework.aop.framework.Advised.class,
-	org.springframework.core.DecoratingProxy.class
-})
+		java.util.List.class,
+		org.springframework.aop.SpringProxy.class,
+		org.springframework.aop.framework.Advised.class,
+		org.springframework.core.DecoratingProxy.class
+	})
 @TypeHint(
 	types = {
 		PluginRegistryFactoryBean.class
